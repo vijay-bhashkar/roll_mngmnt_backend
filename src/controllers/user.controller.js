@@ -59,7 +59,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
     const { email, password } = req.body
 
-    if ( !email) {
+    if (!email) {
         throw new ApiError(400, "email is required")
     }
 
@@ -100,8 +100,63 @@ const loginUser = asyncHandler(async (req, res) => {
 
 })
 
+// Admin Registration
+const registerAdmin = asyncHandler(async (req, res) => {
+
+    const { fullName, email, password, roles } = req.body
+   
+    if (
+        [fullName, email, password].some((field) => field?.trim() === "")
+    ) {
+        throw new ApiError(400, "All fields are required")
+    }
+
+    const existedUser = await User.findOne({
+        $or: [{ email }]
+    })
+
+    if (existedUser) {
+        throw new ApiError(409, "User with email already exists")
+    }
+
+    const user = await User.create({
+        email,
+        password,
+        fullName,
+        type: "ADMIN",
+        roles
+    })
+
+    const createdAdmin = await User.findById(user._id).select(
+        "-password -refreshToken"
+    )
+
+    if (!createdAdmin) {
+        throw new ApiError(500, "Something went wrong while registering the admin")
+    }
+
+    return res.status(201).json(
+        new ApiResponse(200, createdAdmin, "Admin registered Successfully")
+    )
+
+})
+
+const getAdmin = asyncHandler(async (req, res) => {
+    const admins = await User.find({ type: "ADMIN" })
+        .populate({
+            path: "roles",
+            select: "_id name"
+        })
+        .select("_id fullName email roles");
+
+    return res.status(200).json(
+        new ApiResponse(200, admins, "Admin fetched Successfully")
+    )
+})
+
 export {
     registerUser,
     loginUser,
-
+    registerAdmin,
+    getAdmin
 }
