@@ -5,10 +5,10 @@ import { SubMenu } from "../models/submenu.model.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
    
 const createSubMenu = asyncHandler(async (req, res) => {
-    const { roleId, menuId, name, permissions } = req.body;
+    const { menuId, name } = req.body;
 
     if (
-        [roleId, menuId, name].some((field) => field?.trim() === "")
+        [ menuId, name].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
@@ -18,9 +18,7 @@ const createSubMenu = asyncHandler(async (req, res) => {
 
     const newSubmenu = new SubMenu({
       name,
-      roleId,
       menu: menuId,
-      permissions,
       createdBy: req.user._id,
     });
 

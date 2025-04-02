@@ -4,21 +4,21 @@ import { Menu } from "../models/menu.model.js"
 import { ApiResponse } from "../utils/ApiResponse.js";
    
 const createMenu = asyncHandler(async (req, res) => {
-    const { roleId, name } = req.body;
+    const {  name } = req.body;
 
     if (
-        [roleId, name].some((field) => field?.trim() === "")
+        [ name].some((field) => field?.trim() === "")
     ) {
         throw new ApiError(400, "All fields are required")
     }
  
-    const existingMenu = await Menu.findOne({ name, roleId });
+    const existingMenu = await Menu.findOne({ name });
 
     if (existingMenu){
         throw new ApiError(400, "Menu already exists")
     } 
 
-    const newMenu = new Menu({ roleId, name, createdBy: req.user._id });
+    const newMenu = new Menu({  name, createdBy: req.user._id });
     await newMenu.save();
 
     return res.status(201).json(

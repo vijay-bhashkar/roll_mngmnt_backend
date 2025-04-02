@@ -13,7 +13,7 @@ const menuSchema = new Schema({
     roleId: { 
         type: mongoose.Schema.Types.ObjectId, 
         ref: "Role", 
-        required: true 
+        required: false 
     },
 }, {
     timestamps: true

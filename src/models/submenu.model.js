@@ -10,12 +10,12 @@ const subMenuSchema = new Schema({
         ref: "Menu",
         required: true
     },
-    permissions: {
-        add: { type: Boolean, default: false },
-        edit: { type: Boolean, default: false },
-        view: { type: Boolean, default: false },
-        delete: { type: Boolean, default: false },
-    },
+    // permissions: {
+    //     add: { type: Boolean, default: false },
+    //     edit: { type: Boolean, default: false },
+    //     view: { type: Boolean, default: false },
+    //     delete: { type: Boolean, default: false },
+    // },
     createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
@@ -23,7 +23,7 @@ const subMenuSchema = new Schema({
     roleId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Role",
-        required: true
+        required: false
     },
 },{
     timestamps: true
